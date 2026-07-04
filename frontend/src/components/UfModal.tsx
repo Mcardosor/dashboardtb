@@ -51,12 +51,17 @@ export function UfModal({
 
   const opcaoMapa = useMemo(() => {
     if (!detalhe || !geo) return null;
-    const dados = geo.features.map((f) => {
+    // Escala em raiz quadrada: a distribuição de casos por município é muito
+    // assimétrica (a capital costuma concentrar boa parte do total), então
+    // uma escala linear deixaria quase todo o mapa "achatado" perto do zero.
+    const casosPorMuni = geo.features.map((f) => {
       const nome = String(f.properties["NM_MUN"] ?? "");
       const m = porNorm[norm(nome)];
-      return { name: nome, value: m?.casos ?? 0 };
+      return { name: nome, casos: m?.casos ?? 0 };
     });
-    const max = Math.max(...dados.map((d) => d.value), 1);
+    const maxCasos = Math.max(...casosPorMuni.map((d) => d.casos), 1);
+    const dados = casosPorMuni.map((d) => ({ name: d.name, value: Math.sqrt(d.casos) }));
+    const max = Math.sqrt(maxCasos);
     return {
       ...baseOption,
       tooltip: {
@@ -80,7 +85,7 @@ export function UfModal({
         left: 8,
         bottom: 8,
         itemHeight: 90,
-        text: [fmt.format(max), "0"],
+        text: [fmt.format(maxCasos), "0"],
         textStyle: { color: C.muted, fontSize: 10, fontFamily: FONT },
       },
       series: [{

@@ -53,7 +53,12 @@ export function MapaTab({
   const opcaoMapa = useMemo(() => {
     if (!mapa) return null;
     const valores = mapa.estados.map((e) => e[metrica]);
-    const max = Math.max(...valores, 1);
+    const maxReal = Math.max(...valores, 1);
+    // "Casos" é uma contagem absoluta muito assimétrica (SP concentra boa
+    // parte do total) — raiz quadrada espalha a escala de cor melhor do que
+    // linear. Taxas (incidência/mortalidade) já são normalizadas, ficam lineares.
+    const transformar = metrica === "casos" ? Math.sqrt : (v: number) => v;
+    const max = transformar(maxReal);
     return {
       ...baseOption,
       tooltip: {
@@ -80,7 +85,7 @@ export function MapaTab({
         bottom: 8,
         calculable: false,
         itemHeight: 110,
-        text: [cfg.formatar(max), "0"],
+        text: [cfg.formatar(maxReal), "0"],
         textStyle: { color: C.muted, fontSize: 10.5, fontFamily: FONT },
       },
       series: [{
@@ -107,7 +112,7 @@ export function MapaTab({
           },
         },
         label: { show: false },
-        data: mapa.estados.map((e) => ({ name: e.uf, value: e[metrica] })),
+        data: mapa.estados.map((e) => ({ name: e.uf, value: transformar(e[metrica]) })),
       }],
     };
   }, [mapa, metrica, cfg, porUf]);
