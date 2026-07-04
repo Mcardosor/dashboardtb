@@ -3,7 +3,7 @@
  * Substitui a "Análise Livre" (PyGWalker) do dashboard Streamlit: o CSV sai
  * pronto para Excel, R, Python ou qualquer ferramenta de análise.
  */
-import { filtrosQuery, type Resumo } from "../api";
+import { filtrosQuery, withBase, type Resumo } from "../api";
 import { ChartCard } from "../components/ui";
 import type { Filtros } from "../state";
 import { fmt } from "../theme";
@@ -21,7 +21,7 @@ const COLUNAS = [
 ];
 
 export function DadosTab({ filtros, resumo }: { filtros: Filtros; resumo: Resumo | undefined }) {
-  const urlCsv = `/api/export.csv?${filtrosQuery(filtros)}`;
+  const urlCsv = withBase(`/api/export.csv?${filtrosQuery(filtros)}`);
   const bloqueado = filtros.anos.length > 5;
 
   return (

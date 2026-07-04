@@ -170,8 +170,14 @@ export function filtrosQuery(f: Filtros): string {
   return p.toString();
 }
 
+// Prefixa com o base path do build (ex: "/cenarios/tb-v2/") — necessário
+// porque o app fica atrás de um proxy nginx sob um subcaminho.
+export function withBase(url: string): string {
+  return import.meta.env.BASE_URL.replace(/\/$/, "") + url;
+}
+
 async function getJson<T>(url: string): Promise<T> {
-  const r = await fetch(url);
+  const r = await fetch(withBase(url));
   if (!r.ok) throw new Error(`${r.status} ${r.statusText} em ${url}`);
   return r.json();
 }

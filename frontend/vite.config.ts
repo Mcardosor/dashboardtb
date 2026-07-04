@@ -4,7 +4,11 @@ import tailwindcss from "@tailwindcss/vite";
 
 // Dev: o Vite faz proxy de /api para o FastAPI (porta 8000).
 // Prod: o FastAPI serve o build (frontend/dist) e a API na mesma origem.
-export default defineConfig({
+// Produção: servido atrás do proxy nginx em /cenarios/tb-v2/ (prefixo
+// stripado antes de chegar no FastAPI, mas o browser precisa ver os
+// assets com o prefixo).
+export default defineConfig(({ command }) => ({
+  base: command === "build" ? "/cenarios/tb-v2/" : "/",
   plugins: [react(), tailwindcss()],
   server: {
     host: "127.0.0.1",
@@ -27,4 +31,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
