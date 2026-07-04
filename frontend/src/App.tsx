@@ -9,6 +9,7 @@ import { Hero } from "./components/Hero";
 import { KpiCards } from "./components/KpiCards";
 import { Sidebar } from "./components/Sidebar";
 import { useFiltros, type Filtros } from "./state";
+import { useTheme } from "./theme-context";
 import { MapaTab, type MetricaMapa } from "./tabs/MapaTab";
 import { PerfilTab } from "./tabs/PerfilTab";
 import { ClinicoTab } from "./tabs/ClinicoTab";
@@ -30,6 +31,7 @@ type AbaId = (typeof ABAS)[number]["id"];
 export default function App() {
   const { data: meta, isError: metaErro } = useMeta();
   const { filtros } = useFiltros();
+  const { theme, alternar: alternarTema } = useTheme();
   const [aba, setAba] = useState<AbaId>("mapa");
   const [metricaMapa, setMetricaMapa] = useState<MetricaMapa>("incidencia");
   const [sidebarAberta, setSidebarAberta] = useState(false);
@@ -87,6 +89,15 @@ export default function App() {
           </div>
           <button
             type="button"
+            onClick={alternarTema}
+            className="chip"
+            aria-label="Alternar tema"
+            title={theme === "light" ? "Ativar tema escuro" : "Ativar tema claro"}
+          >
+            {theme === "light" ? "🌙" : "☀️"}
+          </button>
+          <button
+            type="button"
             onClick={() => setSidebarAberta(true)}
             className="chip on lg:hidden"
           >
@@ -131,7 +142,7 @@ export default function App() {
             ))}
           </nav>
 
-          <div key={aba} className="rise">
+          <div key={`${aba}-${theme}`} className="rise">
             {aba === "mapa" && (
               <MapaTab filtros={filtrosEfetivos} metrica={metricaMapa} setMetrica={setMetricaMapa} />
             )}

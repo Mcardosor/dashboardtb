@@ -22,7 +22,13 @@ export function Hero({
   const parcial = anoParcial !== null && anos.includes(anoParcial);
 
   return (
-    <header className="rise relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-[#101826] via-[#0e1520] to-[#101423] px-7 py-8 md:px-9">
+    <header
+      className="rise relative overflow-hidden rounded-2xl border border-border px-7 py-8 md:px-9"
+      style={{
+        background:
+          "linear-gradient(135deg, var(--t-card) 0%, var(--t-card2) 55%, var(--t-card) 100%)",
+      }}
+    >
       <div
         className="pointer-events-none absolute -right-24 -top-32 h-80 w-80 rounded-full opacity-25"
         style={{ background: "radial-gradient(circle, rgba(88,166,255,.5), transparent 65%)" }}

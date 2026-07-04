@@ -22,8 +22,8 @@ echarts.use([
 
 export { echarts };
 
-// ── Paleta base ───────────────────────────────────────────────────────────────
-export const C = {
+// ── Paletas (claro = padrão, escuro = alternativo) ────────────────────────────
+export const DARK = {
   bg: "#0a0e14",
   surface: "#10151d",
   card: "#121923",
@@ -39,6 +39,29 @@ export const C = {
   purple: "#a371f7",
   pink: "#f778ba",
 };
+
+export const LIGHT: typeof DARK = {
+  bg: "#f4f6f9",
+  surface: "#ffffff",
+  card: "#ffffff",
+  border: "#dde3ea",
+  text: "#1a2332",
+  muted: "#5a6a7e",
+  faint: "#8fa0b2",
+  accent: "#2b7bb9",
+  green: "#1a7a4c",
+  red: "#c9302c",
+  orange: "#c1631a",
+  yellow: "#a86f0a",
+  purple: "#7c4fd1",
+  pink: "#c23b7a",
+};
+
+// Paleta ativa — mutada em memória por applyChartTheme(), não reatribuída
+// (importações de `C` guardam a referência ao objeto, não um snapshot).
+export const C = { ...LIGHT };
+
+export type ThemeName = "light" | "dark";
 
 // Cores semânticas por rótulo epidemiológico
 export const TB_COLORS: Record<string, string> = {
@@ -114,14 +137,28 @@ export const fmt1 = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 1, m
 
 export const FONT = "'Inter Variable', Inter, system-ui, sans-serif";
 
-/** Base compartilhada de todos os gráficos. */
+/** Base compartilhada de todos os gráficos — mutada por applyChartTheme(). */
 export const baseOption = {
   textStyle: { fontFamily: FONT, color: C.muted },
   tooltip: {
-    backgroundColor: "rgba(16, 21, 29, .96)",
+    backgroundColor: "rgba(255, 255, 255, .97)",
     borderColor: C.border,
     textStyle: { color: C.text, fontSize: 12.5, fontFamily: FONT },
     padding: [8, 12],
-    extraCssText: "box-shadow: 0 8px 24px rgba(0,0,0,.5); border-radius: 10px;",
+    extraCssText: "box-shadow: 0 8px 24px rgba(20,30,50,.12); border-radius: 10px;",
   },
 };
+
+/** Aplica a paleta do tema em C/baseOption (mesma referência, mutada in-place). */
+export function applyChartTheme(theme: ThemeName) {
+  Object.assign(C, theme === "dark" ? DARK : LIGHT);
+  baseOption.textStyle.color = C.muted;
+  baseOption.tooltip.borderColor = C.border;
+  baseOption.tooltip.textStyle.color = C.text;
+  baseOption.tooltip.backgroundColor =
+    theme === "dark" ? "rgba(16, 21, 29, .96)" : "rgba(255, 255, 255, .97)";
+  baseOption.tooltip.extraCssText =
+    theme === "dark"
+      ? "box-shadow: 0 8px 24px rgba(0,0,0,.5); border-radius: 10px;"
+      : "box-shadow: 0 8px 24px rgba(20,30,50,.12); border-radius: 10px;";
+}
