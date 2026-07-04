@@ -1,0 +1,26 @@
+# Raw parquets (103 MB) — apenas os _tratado.parquet são necessários
+dados_dashboard/sinan_tube_[0-9][0-9][0-9][0-9].parquet
+
+# Scripts de pipeline de dados (não usados no runtime)
+scripts/
+
+# Docs internos
+docs/
+
+# Credenciais e configs locais
+.env
+.env.example
+.git/
+.gitignore
+.gitattributes
+
+# Python cache
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Dev
+requirements-pipeline.txt

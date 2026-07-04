@@ -1,0 +1,35 @@
+services:
+  dashboard:
+    build: .
+    image: dashboard-tb-sinan:latest
+    container_name: dashboard-tb
+    restart: unless-stopped
+    ports:
+      - 8502:8501
+    environment:
+      - PYTHONUNBUFFERED=1
+      - STREAMLIT_SERVER_MAX_UPLOAD_SIZE=50
+      - STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+    volumes:
+      - ./app.py:/app/app.py:ro
+      - ./src:/app/src:ro
+      - ./.streamlit:/app/.streamlit:ro
+      - ./dados_dashboard:/app/dados_dashboard:ro
+    deploy:
+      resources:
+        limits:
+          cpus: "3.0"
+          memory: 4G
+        reservations:
+          cpus: "1.5"
+          memory: 2G
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    healthcheck:
+      test: [CMD, curl, -f, http://localhost:8501/cenarios/tb/_stcore/health]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

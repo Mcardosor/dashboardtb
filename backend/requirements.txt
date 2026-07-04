@@ -1,0 +1,7 @@
+fastapi>=0.115
+uvicorn[standard]>=0.32
+duckdb>=1.1
+pandas>=2.2
+python-dotenv>=1.0
+# Opcional: óbitos oficiais (SIM) via PostgreSQL — sem ele a API usa o desfecho SINAN
+psycopg2-binary>=2.9

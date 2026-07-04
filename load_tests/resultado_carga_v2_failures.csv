@@ -1,0 +1,2 @@
+Method,Name,Error,Occurrences,First Seen,Last Seen
+GET,[health] /health,CatchResponseError('Health retornou 404'),38,2026-06-17T18:50:53Z,2026-06-17T18:52:46Z

@@ -1,0 +1,6 @@
+# Pipeline de dados — dependências para scripts ETL (NÃO entram na imagem Docker)
+# Instale no ambiente de desenvolvimento: pip install -r requirements-pipeline.txt
+-r requirements.txt
+sqlalchemy>=2.0
+psycopg2-binary>=2.9
+numpy>=1.26

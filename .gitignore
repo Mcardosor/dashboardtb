@@ -1,0 +1,36 @@
+# Dados brutos e processados (nunca versionar — ficam só na máquina local/VM)
+dados_dashboard/*.parquet
+dados_dashboard/*.csv
+
+# Credenciais
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+*.tsbuildinfo
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Scripts de diagnóstico local (não entram no deploy)
+scripts/baixar_geojson.py
+scripts/checar_banco.py
+scripts/testar_conexao.py
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Documentação interna (não sobe no git)
+docs/
+.claude/
