@@ -96,6 +96,11 @@ def _arquivos(anos: tuple[int, ...]) -> list[str]:
     ]
 
 
+def _files_sql(files: list[str]) -> str:
+    """Lista de Parquets como array literal do DuckDB (read_parquet([...]))."""
+    return "[" + ", ".join(_sql_literal(f) for f in files) + "]"
+
+
 def _executar(sql: str, params: list, anos: tuple[int, ...]) -> pd.DataFrame:
     """
     Executa SQL com a CTE `sinan` sobre os Parquets dos anos pedidos.
@@ -104,7 +109,7 @@ def _executar(sql: str, params: list, anos: tuple[int, ...]) -> pd.DataFrame:
     files = _arquivos(anos)
     if not files:
         return pd.DataFrame()
-    files_sql = "[" + ", ".join(_sql_literal(f) for f in files) + "]"
+    files_sql = _files_sql(files)
     wrapped = f"""
         WITH {_CTE_UFS},
         sinan AS (SELECT * FROM read_parquet({files_sql}, union_by_name = true))
@@ -954,7 +959,7 @@ def export_csv(f: Filtros):
     if not files:
         yield ""
         return
-    files_sql = "[" + ", ".join(_sql_literal(x) for x in files) + "]"
+    files_sql = _files_sql(files)
     sql = f"""
         WITH {_CTE_UFS},
         sinan AS (SELECT * FROM read_parquet({files_sql}, union_by_name = true))
