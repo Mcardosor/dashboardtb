@@ -6,7 +6,7 @@ import { useComorbidades } from "../api";
 import { Chart } from "../components/Chart";
 import { ChartCard, Metrica, SkelCard } from "../components/ui";
 import type { Filtros } from "../state";
-import { baseOption, C, fmt, fmt1, FONT, tbColors } from "../theme";
+import { baseOption, C, fmt, fmt1, FONT, SEQ_INTENSIDADE, tbColors } from "../theme";
 
 export function ComorbidadesTab({ filtros }: { filtros: Filtros }) {
   const { data, isLoading } = useComorbidades(filtros);
@@ -30,7 +30,7 @@ export function ComorbidadesTab({ filtros }: { filtros: Filtros }) {
       },
     },
     grid: { left: 8, right: 84, top: 6, bottom: 6, containLabel: true },
-    xAxis: { type: "value", axisLabel: { color: C.faint, fontSize: 10.5 }, splitLine: { lineStyle: { color: "#141c28" } } },
+    xAxis: { type: "value", axisLabel: { color: C.faint, fontSize: 10.5 }, splitLine: { lineStyle: { color: C.border } } },
     yAxis: {
       type: "category",
       data: data.agravos.slice().reverse().map((a) => a.label),
@@ -90,7 +90,7 @@ export function ComorbidadesTab({ filtros }: { filtros: Filtros }) {
     yAxis: {
       type: "value", max: 100,
       axisLabel: { color: C.faint, fontSize: 10.5, formatter: "{value}%" },
-      splitLine: { lineStyle: { color: "#141c28" } },
+      splitLine: { lineStyle: { color: C.border } },
     },
     series: dv.grupos.map((g) => ({
       name: g,
@@ -138,7 +138,7 @@ export function ComorbidadesTab({ filtros }: { filtros: Filtros }) {
       bottom: 0,
       itemWidth: 12,
       itemHeight: 130,
-      inRange: { color: ["#10151d", "#1a3a5c", "#2B7BB9", "#d29922", "#f85149"] },
+      inRange: { color: SEQ_INTENSIDADE },
       textStyle: { color: C.faint, fontSize: 10, fontFamily: FONT },
       formatter: (v: number) => `${fmt1.format(v)}%`,
     },

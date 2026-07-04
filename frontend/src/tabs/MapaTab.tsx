@@ -12,11 +12,15 @@ import type { Filtros } from "../state";
 
 export type MetricaMapa = "casos" | "incidencia" | "mortalidade";
 
-const METRICAS: Record<MetricaMapa, { rotulo: string; escala: string[]; formatar: (v: number) => string }> = {
-  casos: { rotulo: "Total de casos", escala: SEQ_CASOS, formatar: (v) => fmt.format(v) },
-  incidencia: { rotulo: "Incidência por 100 mil hab.", escala: SEQ_CASOS, formatar: (v) => fmt1.format(v) },
-  mortalidade: { rotulo: "Mortalidade por 100 mil hab.", escala: SEQ_MORTALIDADE, formatar: (v) => fmt1.format(v) },
-};
+// Função (não objeto de módulo) porque SEQ_CASOS/SEQ_MORTALIDADE mudam com o
+// tema — um objeto de módulo congelaria a paleta na primeira importação.
+function metricas(): Record<MetricaMapa, { rotulo: string; escala: string[]; formatar: (v: number) => string }> {
+  return {
+    casos: { rotulo: "Total de casos", escala: SEQ_CASOS, formatar: (v) => fmt.format(v) },
+    incidencia: { rotulo: "Incidência por 100 mil hab.", escala: SEQ_CASOS, formatar: (v) => fmt1.format(v) },
+    mortalidade: { rotulo: "Mortalidade por 100 mil hab.", escala: SEQ_MORTALIDADE, formatar: (v) => fmt1.format(v) },
+  };
+}
 
 export function MapaTab({
   filtros,
@@ -39,7 +43,7 @@ export function MapaTab({
     }
   }, [geo]);
 
-  const cfg = METRICAS[metrica];
+  const cfg = metricas()[metrica];
   const porUf = useMemo(() => {
     const d: Record<string, EstadoMapa> = {};
     mapa?.estados.forEach((e) => (d[e.uf] = e));
@@ -63,7 +67,7 @@ export function MapaTab({
             `Incidência: <b>${fmt1.format(e.incidencia)}</b> /100 mil<br/>` +
             `Mortalidade: <b>${fmt1.format(e.mortalidade)}</b> /100 mil<br/>` +
             `Cura: <b>${fmt1.format(e.cura_pct)}%</b> · Abandono: <b>${fmt1.format(e.abandono_pct)}%</b><br/>` +
-            `<span style="color:#8b98a8;font-size:11px">clique para ver municípios</span>`
+            `<span style="color:${C.muted};font-size:11px">clique para ver municípios</span>`
           );
         },
       },
@@ -88,9 +92,12 @@ export function MapaTab({
         aspectScale: 0.95,
         layoutCenter: ["50%", "50%"],
         layoutSize: "108%",
-        itemStyle: { areaColor: "#141c28", borderColor: "#2a3646", borderWidth: 0.7 },
+        itemStyle: { areaColor: C.card, borderColor: C.borderlight, borderWidth: 0.7 },
         emphasis: {
-          label: { show: true, color: "#fff", fontWeight: 700, fontFamily: FONT },
+          label: {
+            show: true, color: C.text, fontWeight: 700, fontFamily: FONT,
+            textBorderColor: C.card, textBorderWidth: 3,
+          },
           itemStyle: {
             areaColor: null as never,
             borderColor: "#79c0ff",
@@ -123,7 +130,7 @@ export function MapaTab({
       xAxis: {
         type: "value",
         axisLabel: { color: C.faint, fontSize: 10.5 },
-        splitLine: { lineStyle: { color: "#141c28" } },
+        splitLine: { lineStyle: { color: C.border } },
       },
       yAxis: {
         type: "category",
@@ -174,7 +181,7 @@ export function MapaTab({
           caption="💡 Clique num estado para explorar os municípios."
           acoes={
             <div className="flex gap-1 rounded-xl border border-border bg-surface p-1">
-              {(Object.keys(METRICAS) as MetricaMapa[]).map((m) => (
+              {(Object.keys(metricas()) as MetricaMapa[]).map((m) => (
                 <button
                   key={m}
                   type="button"

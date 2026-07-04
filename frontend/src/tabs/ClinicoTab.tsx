@@ -43,7 +43,7 @@ export function ClinicoTab({ filtros }: { filtros: Filtros }) {
     yAxis: {
       type: "value",
       axisLabel: { color: C.faint, fontSize: 10.5, formatter: "{value}%" },
-      splitLine: { lineStyle: { color: "#141c28" } },
+      splitLine: { lineStyle: { color: C.border } },
     },
     visualMap: {
       show: false,
@@ -82,7 +82,7 @@ export function ClinicoTab({ filtros }: { filtros: Filtros }) {
     yAxis: {
       type: "value",
       axisLabel: { color: C.faint, fontSize: 10.5 },
-      splitLine: { lineStyle: { color: "#141c28" } },
+      splitLine: { lineStyle: { color: C.border } },
     },
     series: [{
       type: "bar",

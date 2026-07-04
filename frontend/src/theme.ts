@@ -28,6 +28,7 @@ export const DARK = {
   surface: "#10151d",
   card: "#121923",
   border: "#1e2836",
+  borderlight: "#2a3646",
   text: "#e6edf3",
   muted: "#8b98a8",
   faint: "#5c6a7a",
@@ -45,6 +46,7 @@ export const LIGHT: typeof DARK = {
   surface: "#ffffff",
   card: "#ffffff",
   border: "#dde3ea",
+  borderlight: "#c8d0da",
   text: "#1a2332",
   muted: "#5a6a7e",
   faint: "#8fa0b2",
@@ -128,9 +130,19 @@ export function tbColors(labels: string[]): string[] {
   return labels.map((l) => TB_COLORS[l] ?? FALLBACK[i++ % FALLBACK.length]);
 }
 
-// Escalas sequenciais dos mapas
-export const SEQ_CASOS = ["#0d1b2e", "#123a5c", "#1a5c8a", "#2b7bb9", "#58a6ff", "#a5d6ff"];
-export const SEQ_MORTALIDADE = ["#2b0f12", "#5c1a1e", "#8a2226", "#c93026", "#f85149", "#ffa198"];
+// Escalas sequenciais dos mapas (claro: pálido→saturado; escuro: o inverso,
+// pra combinar com o fundo do card em cada tema). Mutáveis — ver applyChartTheme.
+const SEQ_CASOS_DARK = ["#0d1b2e", "#123a5c", "#1a5c8a", "#2b7bb9", "#58a6ff", "#a5d6ff"];
+const SEQ_CASOS_LIGHT = ["#eaf3fb", "#c7e2f9", "#8cc7f0", "#4f9fdb", "#2b7bb9", "#123a5c"];
+const SEQ_MORTALIDADE_DARK = ["#2b0f12", "#5c1a1e", "#8a2226", "#c93026", "#f85149", "#ffa198"];
+const SEQ_MORTALIDADE_LIGHT = ["#fdecea", "#f8c9c2", "#f0968a", "#e2594a", "#c9302c", "#7a1410"];
+
+export let SEQ_CASOS: string[] = SEQ_CASOS_LIGHT;
+export let SEQ_MORTALIDADE: string[] = SEQ_MORTALIDADE_LIGHT;
+
+// Escala universal para heatmaps/rankings de intensidade (pálido→vermelho),
+// pensada pra funcionar em ambos os temas sem precisar trocar.
+export const SEQ_INTENSIDADE = ["#fff3d6", "#ffd166", "#f4a261", "#e76f51", "#d62828"];
 
 export const fmt = new Intl.NumberFormat("pt-BR");
 export const fmt1 = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -161,4 +173,6 @@ export function applyChartTheme(theme: ThemeName) {
     theme === "dark"
       ? "box-shadow: 0 8px 24px rgba(0,0,0,.5); border-radius: 10px;"
       : "box-shadow: 0 8px 24px rgba(20,30,50,.12); border-radius: 10px;";
+  SEQ_CASOS = theme === "dark" ? SEQ_CASOS_DARK : SEQ_CASOS_LIGHT;
+  SEQ_MORTALIDADE = theme === "dark" ? SEQ_MORTALIDADE_DARK : SEQ_MORTALIDADE_LIGHT;
 }

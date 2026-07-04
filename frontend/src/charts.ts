@@ -5,13 +5,19 @@
 import type { Contagem, DesfechoPor, Piramide } from "./api";
 import { baseOption, C, FONT, fmt, fmt1, tbColors } from "./theme";
 
-const eixoX = {
-  axisLine: { lineStyle: { color: C.border } },
-  axisTick: { show: false },
-  axisLabel: { color: C.muted, fontSize: 11.5 },
-  splitLine: { lineStyle: { color: "#141c28" } },
-};
-const eixoY = { ...eixoX, splitLine: { lineStyle: { color: "#141c28" } } };
+// Funções (não objetos de módulo!) porque C muda com o tema — um objeto
+// construído uma vez na carga do módulo congelaria as cores para sempre.
+function eixoX() {
+  return {
+    axisLine: { lineStyle: { color: C.border } },
+    axisTick: { show: false },
+    axisLabel: { color: C.muted, fontSize: 11.5 },
+    splitLine: { lineStyle: { color: C.border } },
+  };
+}
+function eixoY() {
+  return { ...eixoX(), splitLine: { lineStyle: { color: C.border } } };
+}
 
 /** Donut com rótulos externos e total no centro. */
 export function donut(dados: Contagem[], opts: { max?: number } = {}) {
@@ -78,12 +84,12 @@ export function barH(
       formatter: (p: any) => `<b>${p.name}</b><br/>${fmt.format(p.value)} ${unidade}`,
     },
     grid: { left: 8, right: 52, top: 6, bottom: 6, containLabel: true },
-    xAxis: { type: "value", ...eixoX },
+    xAxis: { type: "value", ...eixoX() },
     yAxis: {
       type: "category",
       data: top.map((d) => d.label),
-      ...eixoY,
-      axisLabel: { ...eixoY.axisLabel, fontSize: 12 },
+      ...eixoY(),
+      axisLabel: { ...eixoY().axisLabel, fontSize: 12 },
     },
     series: [{
       type: "bar",
@@ -126,8 +132,8 @@ export function barV(dados: Contagem[], opts: { unidade?: string } = {}) {
       formatter: (p: any) => `<b>${p.name}</b><br/>${fmt.format(p.value)} ${unidade}`,
     },
     grid: { left: 8, right: 16, top: 24, bottom: 4, containLabel: true },
-    xAxis: { type: "category", data: labels, ...eixoX, axisLabel: { ...eixoX.axisLabel, interval: 0, rotate: labels.length > 6 ? 24 : 0 } },
-    yAxis: { type: "value", ...eixoY },
+    xAxis: { type: "category", data: labels, ...eixoX(), axisLabel: { ...eixoX().axisLabel, interval: 0, rotate: labels.length > 6 ? 24 : 0 } },
+    yAxis: { type: "value", ...eixoY() },
     series: [{
       type: "bar",
       barMaxWidth: 44,
@@ -148,14 +154,14 @@ export function stacked100(d: DesfechoPor, opts: { horizontal?: boolean } = {}) 
   const catAxis = {
     type: "category" as const,
     data: categorias,
-    ...eixoX,
-    axisLabel: { ...eixoX.axisLabel, interval: 0, fontSize: 11.5 },
+    ...eixoX(),
+    axisLabel: { ...eixoX().axisLabel, interval: 0, fontSize: 11.5 },
   };
   const valAxis = {
     type: "value" as const,
     max: 100,
-    ...eixoY,
-    axisLabel: { ...eixoY.axisLabel, formatter: "{value}%" },
+    ...eixoY(),
+    axisLabel: { ...eixoY().axisLabel, formatter: "{value}%" },
   };
   return {
     ...baseOption,
@@ -222,10 +228,10 @@ export function piramide(p: Piramide, opts: { destaqueMenor15?: boolean } = {}) 
       type: "value",
       min: -maxVal,
       max: maxVal,
-      ...eixoX,
-      axisLabel: { ...eixoX.axisLabel, formatter: (v: number) => fmt.format(Math.abs(v)) },
+      ...eixoX(),
+      axisLabel: { ...eixoX().axisLabel, formatter: (v: number) => fmt.format(Math.abs(v)) },
     },
-    yAxis: { type: "category", data: p.faixas, ...eixoY },
+    yAxis: { type: "category", data: p.faixas, ...eixoY() },
     series: [
       {
         name: "Masculino",

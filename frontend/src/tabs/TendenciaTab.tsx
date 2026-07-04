@@ -37,7 +37,7 @@ export function TendenciaTab({ filtros }: { filtros: Filtros }) {
       yAxis: {
         type: "value",
         axisLabel: { color: C.faint, fontSize: 10.5 },
-        splitLine: { lineStyle: { color: "#141c28" } },
+        splitLine: { lineStyle: { color: C.border } },
       },
       series: [
         {
@@ -85,7 +85,7 @@ export function TendenciaTab({ filtros }: { filtros: Filtros }) {
       yAxis: {
         type: "value",
         axisLabel: { color: C.faint, fontSize: 10.5, formatter: (v: number) => `${Math.round(v / 1000)}k` },
-        splitLine: { lineStyle: { color: "#141c28" } },
+        splitLine: { lineStyle: { color: C.border } },
       },
       series: [{
         type: "bar",
@@ -123,7 +123,7 @@ export function TendenciaTab({ filtros }: { filtros: Filtros }) {
       yAxis: {
         type: "value",
         axisLabel: { color: C.faint, fontSize: 10.5 },
-        splitLine: { lineStyle: { color: "#141c28" } },
+        splitLine: { lineStyle: { color: C.border } },
       },
       series: [{
         type: "bar",
@@ -159,7 +159,7 @@ export function TendenciaTab({ filtros }: { filtros: Filtros }) {
       xAxis: {
         type: "value",
         axisLabel: { color: C.faint, fontSize: 10.5, formatter: "{value}%" },
-        splitLine: { lineStyle: { color: "#141c28" } },
+        splitLine: { lineStyle: { color: C.border } },
       },
       yAxis: {
         type: "category",
@@ -208,7 +208,7 @@ export function TendenciaTab({ filtros }: { filtros: Filtros }) {
       yAxis: {
         type: "value",
         axisLabel: { color: C.faint, fontSize: 10.5, formatter: "{value}%" },
-        splitLine: { lineStyle: { color: "#141c28" } },
+        splitLine: { lineStyle: { color: C.border } },
       },
       series: visiveis.map((nome, i) => ({
         name: nome,

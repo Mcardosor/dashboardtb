@@ -5,7 +5,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDetalheUf, useGeoJson, type MunicipioDetalhe } from "../api";
 import type { Filtros } from "../state";
-import { baseOption, C, echarts, fmt, fmt1, FONT, SEQ_CASOS } from "../theme";
+import { baseOption, C, echarts, fmt, fmt1, FONT, SEQ_CASOS, SEQ_INTENSIDADE } from "../theme";
 import { Chart } from "./Chart";
 import { Metrica, Skel } from "./ui";
 
@@ -89,9 +89,12 @@ export function UfModal({
         nameProperty: "NM_MUN",
         roam: true,
         scaleLimit: { min: 0.8, max: 8 },
-        itemStyle: { areaColor: "#141c28", borderColor: "#2a3646", borderWidth: 0.5 },
+        itemStyle: { areaColor: C.card, borderColor: C.borderlight, borderWidth: 0.5 },
         emphasis: {
-          label: { show: true, color: "#fff", fontSize: 10.5, fontFamily: FONT },
+          label: {
+            show: true, color: C.text, fontSize: 10.5, fontFamily: FONT,
+            textBorderColor: C.card, textBorderWidth: 3,
+          },
           itemStyle: { borderColor: "#79c0ff", borderWidth: 1.4 },
         },
         label: { show: false },
@@ -110,7 +113,7 @@ export function UfModal({
         formatter: (p: any) => `<b>${p.name}</b><br/>${fmt.format(p.value)} casos`,
       },
       grid: { left: 8, right: 56, top: 4, bottom: 4, containLabel: true },
-      xAxis: { type: "value", axisLabel: { color: C.faint, fontSize: 10.5 }, splitLine: { lineStyle: { color: "#141c28" } } },
+      xAxis: { type: "value", axisLabel: { color: C.faint, fontSize: 10.5 }, splitLine: { lineStyle: { color: C.border } } },
       yAxis: {
         type: "category",
         data: top.map((m) => m.municipio),
@@ -123,7 +126,7 @@ export function UfModal({
         type: "continuous",
         min: 0,
         max: Math.max(...detalhe.municipios.map((m) => m.casos), 1),
-        inRange: { color: ["#f4a261", "#e76f51", "#c0392b", "#7b0c0c"].reverse() },
+        inRange: { color: SEQ_INTENSIDADE },
         dimension: 0,
       },
       series: [{
