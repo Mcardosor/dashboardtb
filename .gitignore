@@ -31,6 +31,10 @@ scripts/testar_conexao.py
 .DS_Store
 Thumbs.db
 
-# Documentação interna (não sobe no git)
-docs/
+# Documentação interna (não sobe no git) — exceto a citada no README
+# (usa docs/* em vez de docs/ — git não deixa "designorar" arquivos
+# dentro de um diretório inteiramente ignorado)
+docs/*
+!docs/ARQUITETURA.md
+!docs/COMO_FOI_FEITO.md
 .claude/
